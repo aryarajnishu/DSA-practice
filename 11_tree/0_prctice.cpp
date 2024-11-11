@@ -1,113 +1,99 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-class node {
-    public:
-    int data;
-    node* left;
-    node* right;
-
-    node(int data) {
-        this->data = data;
-        this->left = NULL;
-        this->right = NULL;
-    }
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-// Function to build a sample tree
-node* build_tree() {
-    node* root = new node(1);
-    root->left = new node(2);
-    root->right = new node(3);
-    root->left->left = new node(4);
-    root->left->right = new node(5);
-    root->right->left = new node(6);
-    root->right->right = new node(7);
-    return root;
-}
-
-void levelOrderTraversal(node* root) {
-    if (root == NULL) return;
+// void fun(TreeNode* root1, TreeNode* &root2, int x) {
+//     if (root1 == NULL || root1->val == x) {
+//         return;
+//     }
     
-    queue<node*> q;
+//     // Create a new node for root2 with the same value as root1
+//     root2 = new TreeNode(root1->val);
+    
+//     // Recursively copy the structure for left and right subtrees
+//     fun(root1->left, root2->left, x);
+//     fun(root1->right, root2->right, x);
+// }
+
+int fun(TreeNode* root1, TreeNode* &root2, int x) {
+        if (root1 == NULL || root1->val == x) {
+            return 0;
+        }
+
+        root2 = new TreeNode(root1->val);
+        
+        int left = fun(root1->left, root2->left, x);
+        int right = fun(root1->right, root2->right, x);
+
+        return max(left , right) + 1;
+    }
+
+void levelOrder(TreeNode* root) {
+    if (!root) return; 
+    
+    vector<vector<int>> ans1;
+    queue<TreeNode*> q;
+    
     q.push(root);
-    q.push(NULL);
 
     while (!q.empty()) {
-        node* temp = q.front();
-        q.pop();
+        vector<int> ans;
+        int size = q.size();
 
-        if (temp == NULL) {
-            cout << endl;
-            if (!q.empty()) {
-                q.push(NULL);
-            }
-        } else {
-            cout << temp->data << " ";
-            if (temp->left) {
-                q.push(temp->left);
-            }
-            if (temp->right) {
-                q.push(temp->right);
-            }
+        for (int i = 0; i < size; i++) {
+            TreeNode* temp = q.front();
+            q.pop();
+            ans.push_back(temp->val);
+
+            
+                // Check the left child
+                if (temp->left) {
+                    q.push(temp->left);
+                } 
+                if (temp->right) {
+                    q.push(temp->right);
+                }
+            
         }
-    }
-}
-void leftpart(node* root , vector<int> &ans){
-    if(root == NULL || root->left == NULL && root->right == NULL){
-        return;
-    }
-    ans.push_back(root->data);
-    if(root->left){
-        leftpart(root->left , ans);
-    }
-    else{
-        leftpart(root->right , ans);
-    }
-}
-
-void leaftraversal(node* root , vector<int> &ans){
-    if(root == NULL ){
-        return;
-    }
-    
-     if(root->left == NULL && root->right == NULL){
-        ans.push_back(root->data);
-        return;
+        ans1.push_back(ans);
     }
 
-    leaftraversal(root->left , ans);
-    leaftraversal(root->right , ans);
-}
-
-void rightpart(node* root , vector<int> &ans){
-    if(root == NULL || root->left == NULL && root->right == NULL){
-        return;
+    // Output the level order traversal
+    cout << "Resulting Complete Binary Tree (Level Order):" << endl;
+    for (auto i : ans1) {
+        for (auto j : i) {
+            cout << j << " ";
+        }
+        cout << endl;
     }
-    if(root->right){
-        leftpart(root->right , ans);
-    }
-    else{
-        leftpart(root->left , ans);
-    }
-    ans.push_back(root->data);
 }
 
 int main() {
-    node* root = build_tree();
-    cout << "Level Order Traversal:" << endl;
-    levelOrderTraversal(root);
-    cout<<endl;
+    // Creating the binary tree as described in the test case
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    root->right->left = new TreeNode(6);
+    root->right->right = new TreeNode(7);
 
-    vector<int> ans;
-    leftpart(root , ans);
-    leaftraversal(root,ans);
-    rightpart(root , ans);
+    // Perform level order traversal to convert to a complete binary tree
+    levelOrder(root);
 
-    ans.pop_back();
-    for(int i=0 ; i<ans.size() ; i++){
-        cout<<ans[i]<<" ";
-    }
+    TreeNode* root2 = new TreeNode(root->val);
+    cout<<fun(root , root2 , 2)<<endl;
+
+    levelOrder(root2);
+
+
+
     return 0;
 }
-

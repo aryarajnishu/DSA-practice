@@ -43,7 +43,7 @@ int ScountDerangement(int n) {
 }
 
 int main() {
-    int n = 5;
+    int n = 3;
     vector<int> dp(n + 1, -1);
     cout << RcountDerangement(n) << endl;
     cout << McountDerangement(n, dp) << endl;
