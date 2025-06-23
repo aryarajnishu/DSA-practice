@@ -65,9 +65,7 @@ int main() {
     g.printGraph();
 
     unordered_map<int, bool> visited;
-    for (int i = 0; i < n; i++) {
-        visited[i] = false;
-    }
+   
 
     vector<int> ans;
     g.BFSofGraph(visited, ans, 1); // Assuming the BFS starts from node 1

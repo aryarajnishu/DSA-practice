@@ -8,7 +8,7 @@ void topology(unordered_map<int, vector<pair<int, int>>> &adj, unordered_map<int
     for (auto &i : adj[node]) {
         if (!visited[i.first]) {
             topology(adj, visited, stk, i.first);
-        }
+        } 
     }
     stk.push(node);
 }

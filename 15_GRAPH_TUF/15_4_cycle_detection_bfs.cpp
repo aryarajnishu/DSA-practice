@@ -10,7 +10,7 @@ bool isCyclic(int index, unordered_map<int, bool> &visited, unordered_map<int, v
     while(!q.empty()){
         int temp = q.front();
         q.pop();
-
+        
         for(auto i : adj[temp]){
             if(!visited[i]){
                 q.push(i);

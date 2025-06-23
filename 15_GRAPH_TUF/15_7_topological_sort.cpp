@@ -40,11 +40,11 @@ int main() {
         cout << "}" << endl;
     }
 
+    // 
+
+
     unordered_map<int, bool> visited;
-    // Initialize visited map for all nodes
-    for (int i = 1; i <= n; i++) {
-        visited[i] = false;
-    }
+    
 
     vector<int> ans;
 
