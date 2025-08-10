@@ -18,13 +18,13 @@ void shortest_path(unordered_map<int, vector<pair<int, int>>> &adj, stack<int> &
     while (!stk.empty()) {
         int temp = stk.top();
         stk.pop();
-        if (ans[temp] != 1000) {  // Check if node has been reached
-            for (auto &i : adj[temp]) {
-                if (ans[temp] + i.second < ans[i.first]) {
-                    ans[i.first] = ans[temp] + i.second;
-                }
+        
+        for (auto &i : adj[temp]) {
+            if (ans[temp] + i.second < ans[i.first]) {
+                ans[i.first] = ans[temp] + i.second;
             }
         }
+        
     }
 }
 

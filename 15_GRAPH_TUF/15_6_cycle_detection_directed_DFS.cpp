@@ -40,10 +40,6 @@ int main() {
 
     unordered_map<int, bool> visited;
     unordered_map<int , bool> restack;
-    for (int i = 1; i <= n; i++) {
-        visited[i] = false;
-        restack[i] = false;
-    }
 
     for (int i = 1; i <= n; i++) {
         if (!visited[i]) {

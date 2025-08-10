@@ -1,63 +1,65 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-void BFS(unordered_map<int , vector<int> > map , unordered_map<int , bool> &vis ,int node , vector<int> &ans){
+
+vector<int> kahnTopologicalSort(int n, vector<vector<int>>& adj) {
+    vector<int> inDegree(n, 0); 
+    vector<int> topoOrder;
+    
+    // Calculate in-degree of each vertex
+    for (int i = 0; i < n; ++i) {
+        for (int j : adj[i]) {
+            inDegree[j]++;
+        }
+    }
+
+    // Queue to store vertices with in-degree 0
     queue<int> q;
-    q.push(node);
-    vis[node] = true;
+    for (int i = 0; i < n; ++i) {
+        if (inDegree[i] == 0) {
+            q.push(i);
+        }
+    }
 
-    while(!q.empty()){
-        int temp = q.front();
+    // Process the vertices
+    while (!q.empty()) {
+        int u = q.front();
         q.pop();
+        topoOrder.push_back(u);
 
-        ans.push_back(temp);
-
-        for(auto i : map[temp]){
-            if(!vis[i]){
-                q.push(i);
-                vis[i] = true;
+        for (int v : adj[u]) {
+            inDegree[v]--;
+            if (inDegree[v] == 0) {
+                q.push(v);
             }
         }
     }
+
+    return topoOrder;
 }
 
-void DFS(unordered_map<int , vector<int> > map , unordered_map<int , bool> &vis ,int node , vector<int> &ans){
-    vis[node] = true;
-    ans.push_back(node);
+int main() {
+    int n, m;  // Number of vertices and edges
+    cout << "Enter the number of vertices and edges: ";
+    cin >> n >> m;
 
-    for(auto i : map[node]){
-        if(!vis[i]){
-            DFS(map , vis , i , ans);
+    vector<vector<int>> adj(n);  // Adjacency list
+
+    cout << "Enter the edges (u v): " << endl;
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+    }
+
+    vector<int> topoOrder = kahnTopologicalSort(n, adj);
+
+    
+        for (int v : topoOrder) {
+            cout << v << " ";
         }
-    }
-}
+        cout << endl;
 
-int main(){
-    unordered_map<int , vector<int> > map;
-    map[0] = {1,2};
-    map[1] = {0,2};
-    map[2] = {0,1,3,4};
-    map[3] = {2};
-    map[4] = {2};
-
-    vector<int> ans;
-    unordered_map<int , bool> vis;
-
-    // BFS(map , vis ,0 , ans);
-
-
-    for(int i=0 ; i<5 ; i++){
-        if(!vis[i]){
-            DFS(map, vis , i , ans);
-        }
-    }
-
-    DFS(map , vis , 0 , ans);
-
-    for(auto i : ans){
-        cout<<i<<" ";
-    }
-
-    cout<<endl;
-
+    return 0;
 }
