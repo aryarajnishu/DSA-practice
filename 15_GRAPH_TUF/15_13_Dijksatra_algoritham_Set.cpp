@@ -13,15 +13,10 @@ void sortpart(unordered_map<int, vector<pair<int, int>>> &adj , vector<int> &dis
 
         for(auto &i : adj[node]){
             if(weight + i.second < dis[i.first]){
-                // If there's already a better distance found, remove the old one
                 if (dis[i.first] != INT_MAX) {
                     mh.erase(mh.find({dis[i.first], i.first}));
                 }
-                
-                // Update the distance
                 dis[i.first] = weight + i.second;
-                
-                // Insert the updated distance in the set
                 mh.insert({dis[i.first], i.first});
             }
         }
