@@ -1,76 +1,15 @@
-#include<bits/stdc++.h>
-using namespace std;
+struct node{
 
-class node{
-    public:
+public:
     int data;
-    node* next;
+    node* left;
+    node* right;
 
-    node(int data){
-        this-> data = data;
-        this-> next = NULL;
+    node(int x){
+        data = x;
+        left = nullptr;
+        right = nullptr;
     }
 };
-void insertAthead(node* &head , int data){
-    node* temp = new node(data);
-    temp->next = head;
-    head = temp;
-}
 
-void insertAttail(node* &tail,int data){
-    node* temp = new node(data);
-    tail->next = temp;
-    tail = temp;
-}
-
-
-node* reversenode(node* head){
-    node* pre = NULL;
-    node* curr = head;
-    while(curr != NULL){
-        node* temp = curr->next;
-        curr->next = pre;
-        pre = curr;
-        curr = temp;
-    }
-    head = pre;
-    return head;
-}
-
-
-// node* reversenode(node* head){
-//     node* pre = NULL;
-//     node* curr = head;
-//     node* forword = NULL;
-//     while(curr != NULL){
-//         forword = curr->next;
-//         curr->next = pre;
-//         pre = curr;
-//         curr = forword;
-//     }
-//     head = pre;
-//     return head;
-// }
-
-void print(node* &head){
-    node* temp = head;
-    while(temp != NULL){
-        cout<<temp->data <<" ";
-        temp = temp->next;
-    }
-}
-
-int main(){
-    node* head = new node(1);
-    node* tail = head;
-    insertAttail(tail,2);
-    insertAttail(tail,3);
-    insertAttail(tail,4);
-    insertAttail(tail,5);
-    insertAttail(tail,6);
-    print(head);
-    cout<<endl;
-    head = reversenode(head);
-    print(head);
-}
-
+node* root = new  node(1);

@@ -1,71 +1,70 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-class node{
-    public:
+class node {
+public:
     int data;
-    node* next;
+    node *next;
 
-    node(int d){
-        this->data = d;
+    node(int data) {
+        this->data = data;
         this->next = NULL;
     }
-    ~node(){
+
+    ~node() {
         int value = this->data;
-        if(this->next != NULL){
+        if (this->next != NULL) {
             delete next;
             this->next = NULL;
         }
     }
 };
-void insertAttail(node* &tail,int data){
-    node* temp = new node(data);
+
+// Insert at head
+void insertAtHead(node *&head, int data) {
+    node *temp = new node(data);
+    temp->next = head;
+    head = temp;
+}
+
+// Insert at tail
+void insertAtTail(node *&tail, int data) {
+    node *temp = new node(data);
     tail->next = temp;
     tail = temp;
 }
 
-void insertathead(node* &head,int data){
-    node* temp = new node(data);
-    temp->next = head;
-    head = temp;
-}
-void insertAtPosition(node* head ,int data , int position){
-    node* temp = new node(data);
-    if(position == 1){
-        insertathead(head,data);
-        return;
+// Print linked list
+void print(node *&head) {
+    node *temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
     }
-    else{
-        int count = 1;
-        node* curr = head;
-        while(count < position-1){
-            curr=curr->next;
-            count++;
-        }
-        temp->next = curr->next;
-        curr->next = temp;
-    }
+    cout << endl;
 }
-void printlist(node* head){
-    node* temp = head;
-    while(temp != NULL){
-        cout<<temp->data<<" ";
-        temp=temp->next;
+
+int main() {
+    node *node1 = new node(0);
+    node *head = node1;
+    node *tail = node1;
+
+    
+    for (int i = 1; i <= 9; i++) {
+        insertAtTail(tail, i);
     }
-    cout<<endl;
-}
-int main(){
-    node* node1 = new node(1);
-    node* tail = node1;
-    node* head = node1;
-    insertAttail(tail , 2);
-    insertAttail(tail , 3);
-    insertAttail(tail , 4);
-    insertAttail(tail , 5);
-    insertAttail(tail , 6);
-    insertAttail(tail , 7);
-    insertAttail(tail , 8);
-    printlist(head);
-    insertAtPosition(head,38,4);
-    printlist(head);
+
+    print(head);
+
+    node* add = head;
+    print(add);
+    node* temp = new node(-1);
+
+    while(add != NULL && add->next != NULL){
+        temp->next = add;
+        add = add->next->next;
+    }
+    print(add);
+    print(temp);
+    return 0;
 }

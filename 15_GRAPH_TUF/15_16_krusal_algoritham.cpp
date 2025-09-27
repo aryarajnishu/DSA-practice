@@ -1,13 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-void makeset(vector<int> &rank , vector<int> &parent , int n){
-    for(int i=1 ; i<=n ; i++){
-        rank[i] = 0;
-        parent[i] = i;
-    }
-}
-
 int parentis(vector<int> &parent , int n){
     if(n == parent[n]){
         return n;
@@ -16,26 +9,29 @@ int parentis(vector<int> &parent , int n){
 }
 
 void unionByRank(int u , int v , vector<int> &parent , vector<int> &rank){
-    u = parentis(parent , u);
-    v = parentis(parent , v);
+    int par_u = parentis(parent , u);
+    int par_v = parentis(parent , v);
 
-    if(rank[u] > rank[v]){
-        parent[v] = u;
+    if(rank[par_u] > rank[par_v]){
+        parent[v] = par_u;
     }
-    else if(rank[u] < rank[v]){
-        parent[u] = v;
+    else if(rank[par_u] < rank[par_v]){
+        parent[par_u] = par_v;
     }
     else{
-        parent[u] = v;
-        rank[v]++;
+        parent[par_u] = par_v;
+        rank[par_v]++;
     }
 }
 
 void kruskal(int n  , vector<vector<int>> edges){
+    
+    vector<int> rank(n+1 , 0);
     vector<int> parent(n+1);
-    vector<int> rank(n+1);
-    makeset(rank , parent , n);
-
+    for(int i=0 ; i<=n ; i++){
+        parent[i] = i;
+    }
+    
     int minWeight = 0;
     vector<pair<int,int>> edge;
 

@@ -1,81 +1,81 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-void makeset(vector<int> &rank , vector<int> &parent , int n){
-    for(int i=1 ; i<=n ; i++){
-        rank[i] = 0;
-        parent[i] = i;
-    }
-}
+void primsAlgoritham(unordered_map<int, vector<pair<int, int>>> &adj, vector<int> &vis,
+                    vector<pair<int, int>> &mstedj, int &mstsum, int Snode) {
 
-int parentis(vector<int> &parent , int n){
-    if(n == parent[n]){
-        return n;
-    }
-    return parent[n] = parentis(parent , parent[n]);
-}
 
-void unionByRank(int u , int v , vector<int> &parent , vector<int> &rank){
-    u = parentis(parent , u);
-    v = parentis(parent , v);
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+    pq.push({0, Snode, -1}); 
 
-    if(rank[u] > rank[v]){
-        parent[v] = u;
-    }
-    else if(rank[u] < rank[v]){
-        parent[u] = v;
-    }
-    else{
-        parent[u] = v;
-        rank[v]++;
-    }
-}
+    while (!pq.empty()) {
+        int node = pq.top()[1], parent = pq.top()[2], weight = pq.top()[0];
+        pq.pop();
 
-void kruskal(int n  , vector<vector<int>> edges){
-    vector<int> parent(n+1);
-    vector<int> rank(n+1);
-    makeset(rank , parent , n);
+        if (!vis[node]) {
+            vis[node] = true;
 
-    int minWeight = 0;
-    vector<pair<int,int>> edge;
+            mstsum += weight;
+            if (vis[node] != 0) {
+                mstedj.push_back({parent, node});
+            }
 
-    sort(edges.begin() , edges.end());
-
-    for(auto i : edges){
-        // auto [wt , u , v] = i;
-        int wt = i[0];
-        int u = i[1];
-        int v = i[2];
-
-        if(parentis(parent , u) != parentis(parent , v)){
-            minWeight = minWeight + wt;
-            edge.push_back({u , v});
-            unionByRank(u ,  v, parent , rank);
+            for (auto i : adj[node]) {
+                if (!vis[i.first]) {
+                    pq.push({i.second, i.first, node});
+                }
+            }
         }
     }
-
-    cout << "Edges in the MST:\n";
-    for (auto &ed : edge) {
-        cout << ed.first << " - " << ed.second << endl;
-    }
-    cout << "Total weight of the MST: " << minWeight << endl;
 }
 
-int main(){
-    int n = 7;
-    vector<vector<int>> edges = {
-        {2, 1, 2},
-        {1, 1, 4},
-        {4, 1, 5},
-        {9, 4, 5},
-        {5, 4, 3},
-        {3, 2, 4},
-        {3, 2, 3},
-        {2, 6, 7},
-        {8, 3, 6}
+int main() {
+    int n = 5; // number of vertices
+    int m = 7; // number of edges
+    int Snode = 0; // source node
+
+    vector<tuple<int,int,int>> edges = {
+        {0, 1, 4},
+        {0, 2, 2},
+        {1, 2, 1},
+        {1, 3, 5},
+        {2, 3, 8},
+        {2, 4, 10},
+        {3, 4, 2}
     };
 
-    kruskal(n , edges);
-    return 0;
 
+    unordered_map<int, vector<pair<int, int>>> adj;
+    for (auto &e : edges) {
+        int u, v, w;
+        tie(u, v, w) = e;
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w});
+    }
+
+    cout << "Adjacency list is:\n";
+    for (int i = 0; i < n; i++) {
+        cout << i << " -> { ";
+        for (auto &j : adj[i]) {
+            cout << "[" << j.first << "," << j.second << "] ";
+        }
+        cout << "}\n";
+    }
+
+
+    vector<int> vis(n+1,0);
+
+    int mstsum = 0;
+    vector<pair<int, int>> mstedj;
+
+    primsAlgoritham(adj, vis, mstedj, mstsum, Snode);
+
+    cout << "The edges in the Minimum Spanning Tree (MST) are:" << endl;
+    for (auto &edge : mstedj) {
+        cout << edge.first << " - " << edge.second << endl;
+    }
+
+    cout << "Total path sum is: " << mstsum << endl;
+
+    return 0;
 }
