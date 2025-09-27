@@ -2,8 +2,8 @@
 using namespace std;
 
 void dfs(int node, vector<int> &low, vector<int> &dis, int parent,
-         unordered_map<int, vector<int>> &adj, unordered_map<int, bool> &visited, 
-         int &timmer, vector<vector<int>> &result) {
+        unordered_map<int, bool> &visited,int &timmer, 
+        vector<vector<int>> &result, unordered_map<int, vector<int>> &adj) {
     visited[node] = true;
 
     low[node] = dis[node] = timmer++;
@@ -13,7 +13,7 @@ void dfs(int node, vector<int> &low, vector<int> &dis, int parent,
             continue;
         }
         if (!visited[nbh]) {
-            dfs(nbh, low, dis, node, adj, visited, timmer, result);
+            dfs(nbh, low, dis, node, visited, timmer, result, adj);
             low[node] = min(low[node], low[nbh]);
 
             // Check if the edge is a bridge
@@ -55,7 +55,7 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         if (!visited[i]) {
-            dfs(i, low, dis, -1, adj, visited, timmer, result);
+            dfs(i, low, dis, -1, visited, timmer, result , adj);
         }
     }
 
