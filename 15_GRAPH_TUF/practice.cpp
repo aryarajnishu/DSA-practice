@@ -1,81 +1,82 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void primsAlgoritham(unordered_map<int, vector<pair<int, int>>> &adj, vector<int> &vis,
-                    vector<pair<int, int>> &mstedj, int &mstsum, int Snode) {
+#include <bits/stdc++.h>
+using namespace std;
 
+void bellman_ford(vector<vector<int>> &edges, int V, int E, int src) {
+    vector<int> dis(V, INT_MAX);
+    dis[src] = 0;
 
-    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
-    pq.push({0, Snode, -1}); 
+    // Relax edges (V-1) times
+    for (int i = 0; i < V - 1; i++) {
+        for (int j = 0; j < E; j++) {
+            int u = edges[j][0];
+            int v = edges[j][1];
+            int w = edges[j][2];
 
-    while (!pq.empty()) {
-        int node = pq.top()[1], parent = pq.top()[2], weight = pq.top()[0];
-        pq.pop();
-
-        if (!vis[node]) {
-            vis[node] = true;
-
-            mstsum += weight;
-            if (vis[node] != 0) {
-                mstedj.push_back({parent, node});
-            }
-
-            for (auto i : adj[node]) {
-                if (!vis[i.first]) {
-                    pq.push({i.second, i.first, node});
-                }
+            if (dis[u] != INT_MAX && dis[u] + w < dis[v]) {
+                dis[v] = dis[u] + w;
             }
         }
+    }
+
+    // Check for negative weight cycle
+    for (int j = 0; j < E; j++) {
+        int u = edges[j][0];
+        int v = edges[j][1];
+        int w = edges[j][2];
+
+        if (dis[u] != INT_MAX && dis[u] + w < dis[v]) {
+            cout << "Graph contains a negative weight cycle!" << endl;
+            return;
+        }
+    }
+
+    cout << "Shortest distances from source " << src << ":\n";
+    for (int i = 0; i < V; i++) {
+        cout << "Node " << i << " : ";
+        if (dis[i] == INT_MAX) cout << "INF\n";
+        else cout << dis[i] << "\n";
     }
 }
 
+
+
+
 int main() {
-    int n = 5; // number of vertices
-    int m = 7; // number of edges
-    int Snode = 0; // source node
+    int n;
+    cout << "Enter the number of vertices: ";
+    cin >> n;
 
-    vector<tuple<int,int,int>> edges = {
-        {0, 1, 4},
-        {0, 2, 2},
-        {1, 2, 1},
-        {1, 3, 5},
-        {2, 3, 8},
-        {2, 4, 10},
-        {3, 4, 2}
-    };
+    int m;
+    cout << "Enter the number of edges: ";
+    cin >> m;
 
+    int Snode;
+    cout << "Enter the source node: ";
+    cin >> Snode;
 
-    unordered_map<int, vector<pair<int, int>>> adj;
-    for (auto &e : edges) {
+    vector<vector<int>> adj;
+    cout << "Enter the edges (format: u v w):" << endl;
+    for (int i = 0; i < m; i++) {
         int u, v, w;
-        tie(u, v, w) = e;
-        adj[u].push_back({v, w});
-        adj[v].push_back({u, w});
+        cin >> u >> v >> w;
+        adj[i][0] = u;
+        adj[i][1] = v;
+        adj[i][2] = w;
+
     }
 
-    cout << "Adjacency list is:\n";
-    for (int i = 0; i < n; i++) {
-        cout << i << " -> { ";
-        for (auto &j : adj[i]) {
-            cout << "[" << j.first << "," << j.second << "] ";
-        }
-        cout << "}\n";
+    cout<<"our edge is :-";
+    for(int i=0 ; i<m ; i++){
+        cout<<adj[i][0]<<" "<<adj[i][1]<<" "<<adj[i][2]<<endl;
     }
 
+    
+    vector<int> dis(n , INT_MAX);
 
-    vector<int> vis(n+1,0);
-
-    int mstsum = 0;
-    vector<pair<int, int>> mstedj;
-
-    primsAlgoritham(adj, vis, mstedj, mstsum, Snode);
-
-    cout << "The edges in the Minimum Spanning Tree (MST) are:" << endl;
-    for (auto &edge : mstedj) {
-        cout << edge.first << " - " << edge.second << endl;
-    }
-
-    cout << "Total path sum is: " << mstsum << endl;
+    bellman_ford(adj , Snode , n , m);
 
     return 0;
 }
