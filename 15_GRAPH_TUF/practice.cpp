@@ -1,82 +1,72 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-#include <bits/stdc++.h>
-using namespace std;
-
-void bellman_ford(vector<vector<int>> &edges, int V, int E, int src) {
-    vector<int> dis(V, INT_MAX);
-    dis[src] = 0;
-
-    // Relax edges (V-1) times
-    for (int i = 0; i < V - 1; i++) {
-        for (int j = 0; j < E; j++) {
-            int u = edges[j][0];
-            int v = edges[j][1];
-            int w = edges[j][2];
-
-            if (dis[u] != INT_MAX && dis[u] + w < dis[v]) {
-                dis[v] = dis[u] + w;
-            }
-        }
+int parentis(vector<int> &parent , int n){
+    if(n == parent[n]){
+        return n;
     }
+    return parent[n] = parentis(parent , parent[n]);
+}
 
-    // Check for negative weight cycle
-    for (int j = 0; j < E; j++) {
-        int u = edges[j][0];
-        int v = edges[j][1];
-        int w = edges[j][2];
+void findunion(int u , int v , vector<int> &parent , vector<int> &rank){
+    int par_u = parentis(parent , u);
+    int par_v = parentis(parent , v);
 
-        if (dis[u] != INT_MAX && dis[u] + w < dis[v]) {
-            cout << "Graph contains a negative weight cycle!" << endl;
-            return;
-        }
+    if(rank[par_u] > rank[par_v]){
+        parent[v] = par_u;
     }
-
-    cout << "Shortest distances from source " << src << ":\n";
-    for (int i = 0; i < V; i++) {
-        cout << "Node " << i << " : ";
-        if (dis[i] == INT_MAX) cout << "INF\n";
-        else cout << dis[i] << "\n";
+    else if(rank[par_u] < rank[par_v]){
+        parent[par_u] = par_v;
+    }
+    else{
+        parent[par_u] = par_v;
+        rank[par_v]++;
     }
 }
 
+void kruskal(int n , vector<vector<int>> edges){
+    int m = edges.size();
+    vector<int> parent(n+1);
+    vector<int> rank(n+1 , -1);
 
-
-
-int main() {
-    int n;
-    cout << "Enter the number of vertices: ";
-    cin >> n;
-
-    int m;
-    cout << "Enter the number of edges: ";
-    cin >> m;
-
-    int Snode;
-    cout << "Enter the source node: ";
-    cin >> Snode;
-
-    vector<vector<int>> adj;
-    cout << "Enter the edges (format: u v w):" << endl;
-    for (int i = 0; i < m; i++) {
-        int u, v, w;
-        cin >> u >> v >> w;
-        adj[i][0] = u;
-        adj[i][1] = v;
-        adj[i][2] = w;
-
+    for(int i=1 ; i<=n ; i++){
+        parent[i] = i;
     }
 
-    cout<<"our edge is :-";
+    sort(edges.begin() , edges.end());
+
+    vector<pair<int,int>> ans;
+    int mst = 0;
+
     for(int i=0 ; i<m ; i++){
-        cout<<adj[i][0]<<" "<<adj[i][1]<<" "<<adj[i][2]<<endl;
+        int w = edges[i][0],u = edges[i][1] , v = edges[i][2];
+
+        if(parentis(parent , u) != parentis(parent , v)){
+            ans.push_back({u,v});
+            mst += w;
+            findunion(u , v , parent , rank);
+        }
     }
 
-    
-    vector<int> dis(n , INT_MAX);
+    cout<<"mst is "<<mst;
+}
 
-    bellman_ford(adj , Snode , n , m);
+int main(){
+    int n = 7;
+    vector<vector<int>> edges = {
+        {2, 1, 2},
+        {1, 1, 4},
+        {4, 1, 5},
+        {9, 4, 5},
+        {5, 4, 3},
+        {3, 2, 4},
+        {3, 2, 3},
+        {2, 6, 7},
+        {8, 3, 6}
 
+    };
+
+    kruskal(n , edges);
     return 0;
+
 }

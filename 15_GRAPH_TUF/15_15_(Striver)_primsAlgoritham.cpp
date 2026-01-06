@@ -1,33 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void primsAlgoritham(unordered_map<int, vector<pair<int, int>>> &adj, unordered_map<int, bool> &visited,
-                    vector<pair<int, int>> &mstedj, int &mstsum, int Snode) {
-
+void primsAlgoritham(unordered_map<int, vector<pair<int, int>>> &adj,
+                     unordered_map<int, bool> &visited,
+                     vector<pair<int, int>> &mstedj, int &mstsum, int Snode) {
 
     priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
     pq.push({0, Snode, -1}); 
 
     while (!pq.empty()) {
-        int node = pq.top()[1], parent = pq.top()[2], weight = pq.top()[0];
+        int weight = pq.top()[0];
+        int node   = pq.top()[1];
+        int parent = pq.top()[2];
         pq.pop();
 
-        if (!visited[node]) {
-            visited[node] = true;
+        if (visited[node]) continue;     
+        visited[node] = true;            
 
-            mstsum += weight;
-            if (parent != -1) {
-                mstedj.push_back({parent, node});
-            }
+        mstsum += weight;
+        if (parent != -1) {
+            mstedj.push_back({parent, node});
+        }
 
-            for (auto i : adj[node]) {
-                if (!visited[i.first]) {
-                    pq.push({i.second, i.first, node});
-                }
+        for (auto &i : adj[node]) {
+            if (!visited[i.first]) {
+                pq.push({i.second, i.first, node});
             }
         }
     }
 }
+
 
 int main() {
     int n;
